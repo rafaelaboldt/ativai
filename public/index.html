@@ -41,7 +41,9 @@
           placeholder="Ex.: Multiplicação, Sistema Solar, Substantivos..."
         ></textarea>
 
-        <button type="button">Gerar Atividade</button>
+        <button type="button" onclick="gerarAtividade()">
+          Gerar Atividade
+        </button>
       </section>
 
       <section class="resultado">
@@ -52,5 +54,36 @@
         </pre>
       </section>
     </div>
+    <script>
+      async function gerarAtividade() {
+        const ano = document.getElementById("ano").value;
+        const disciplina = document.getElementById("disciplina").value;
+        const conteudo = document.getElementById("conteudo").value;
+
+        const resposta = document.getElementById("resposta");
+
+        resposta.textContent = "Gerando atividade...";
+
+        try {
+          const response = await fetch("/api/atividade", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ano,
+              disciplina,
+              conteudo,
+            }),
+          });
+
+          const data = await response.json();
+
+          resposta.textContent = data.resultado;
+        } catch (error) {
+          resposta.textContent = "Erro ao conectar com o servidor.";
+        }
+      }
+    </script>
   </body>
 </html>
