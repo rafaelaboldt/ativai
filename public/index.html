@@ -41,7 +41,7 @@
           placeholder="Ex.: Multiplicação, Sistema Solar, Substantivos..."
         ></textarea>
 
-        <button type="button" onclick="gerarAtividade()">
+        <button id="btnGerar" type="button" onclick="gerarAtividade()">
           Gerar Atividade
         </button>
       </section>
@@ -49,9 +49,7 @@
       <section class="resultado">
         <h2>Atividade Gerada</h2>
 
-        <pre id="resposta">
-            A atividade aparecerá aqui.
-        </pre>
+        <pre id="resposta">A atividade aparecerá aqui.</pre>
       </section>
     </div>
     <script>
@@ -62,9 +60,34 @@
 
         const resposta = document.getElementById("resposta");
 
+        const botao = document.getElementById("btnGerar");
+
+        if (!disciplina.trim()) {
+          resposta.textContent = "Informe a disciplina.";
+          return;
+        }
+
+        if (disciplina.trim().length < 3) {
+          resposta.textContent = "Descreva melhor a disciplina.";
+          return;
+        }
+
+        if (!conteudo.trim()) {
+          resposta.textContent = "Informe o conteúdo.";
+          return;
+        }
+
+        if (conteudo.trim().length < 3) {
+          resposta.textContent = "Descreva melhor o conteúdo da atividade.";
+          return;
+        }
+
         resposta.textContent = "Gerando atividade...";
 
-        const prompt = `ANO:${ano};DISCIPLINA:${disciplina};CONTEUDO:${conteudo}`;
+        const prompt = `ANO:${ano};DISCIPLINA:${disciplina.trim()};CONTEUDO:${conteudo.trim()}`;
+
+        botao.disabled = true;
+        botao.textContent = "Gerando...";
 
         try {
           const response = await fetch("/api/llm", {
@@ -87,6 +110,9 @@
           resposta.textContent = data.resposta;
         } catch (error) {
           resposta.textContent = "Erro ao conectar com a API local.";
+        } finally {
+          botao.disabled = false;
+          botao.textContent = "Gerar Atividade";
         }
       }
     </script>
