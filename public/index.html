@@ -64,24 +64,29 @@
 
         resposta.textContent = "Gerando atividade...";
 
+        const prompt = `ANO:${ano};DISCIPLINA:${disciplina};CONTEUDO:${conteudo}`;
+
         try {
-          const response = await fetch("/api/atividade", {
+          const response = await fetch("/api/llm", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              ano,
-              disciplina,
-              conteudo,
+              prompt,
             }),
           });
 
           const data = await response.json();
 
-          resposta.textContent = data.resultado;
+          if (!response.ok) {
+            resposta.textContent = data.erro || "Erro desconhecido.";
+            return;
+          }
+
+          resposta.textContent = data.resposta;
         } catch (error) {
-          resposta.textContent = "Erro ao conectar com o servidor.";
+          resposta.textContent = "Erro ao conectar com a API local.";
         }
       }
     </script>
