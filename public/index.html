@@ -44,6 +44,10 @@
         <button id="btnGerar" type="button" onclick="gerarAtividade()">
           Gerar Atividade
         </button>
+
+        <button id="btnPdf" type="button" onclick="baixarPdf()" disabled>
+          Baixar PDF
+        </button>
       </section>
 
       <section class="resultado">
@@ -53,6 +57,7 @@
       </section>
     </div>
     <script>
+      let ultimaAtividade = "";
       async function gerarAtividade() {
         const ano = document.getElementById("ano").value;
         const disciplina = document.getElementById("disciplina").value;
@@ -107,12 +112,37 @@
             return;
           }
 
-          resposta.textContent = data.resposta;
+          ultimaAtividade = data.resposta;
+          resposta.textContent = ultimaAtividade;
+          document.getElementById("btnPdf").disabled = false;
         } catch (error) {
           resposta.textContent = "Erro ao conectar com a API local.";
         } finally {
           botao.disabled = false;
           botao.textContent = "Gerar Atividade";
+        }
+      }
+
+      async function baixarPdf() {
+        try {
+          const response = await fetch("/api/pdf", {
+            method: "POST",
+            headers: { 
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              conteudo: ultimaAtividade
+            }),
+          });
+
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } catch (error) {
+          alert("Erro ao gerar o PDF.");
         }
       }
     </script>

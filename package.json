@@ -7,6 +7,7 @@
   "dependencies": {
     "cors": "latest",
     "dotenv": "latest",
-    "express": "latest"
+    "express": "latest",
+    "pdfkit": "^0.19.1"
   }
 }

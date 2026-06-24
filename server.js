@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import PDFDocument from "pdfkit";
 const app = express();
 const PORT = 3000;
 const API_KEY = process.env.OPENROUTER_API_KEY;
@@ -15,6 +16,26 @@ app.use(express.static("public"));
 app.get("/api/status", (req, res) => {
     res.json({ status: "API local funcionando", model: MODEL });
 });
+app.post("/api/pdf", (req, res) => {
+    try {
+        const { conteudo } = req.body;
+        if (!conteudo) {
+            return res.status(400).json({ erro: "Conteúdo não informado."});
+        }
+        const doc = new PDFDocument();
+        res.setHeader("Content-Disposition", "attachment; filename=atividade.pdf");
+        res.setHeader("Content-Type", "application/pdf");
+        doc.pipe(res);
+        doc.fontSize(16);
+        doc.text("Atividade Gerada pelo AtivAI");
+        doc.moveDown();
+        doc.fontSize(12);
+        doc.text(conteudo);
+        doc.end();
+    } catch (error) {
+        res.status(500).json({ erro: "Erro ao gerar PDF."});
+    }
+})
 app.post("/api/llm", async (req, res) => {
     try {
         const { prompt } = req.body;
