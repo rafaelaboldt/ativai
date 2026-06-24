@@ -22,15 +22,30 @@ app.post("/api/pdf", (req, res) => {
         if (!conteudo) {
             return res.status(400).json({ erro: "Conteúdo não informado."});
         }
-        const doc = new PDFDocument();
+        const doc = new PDFDocument({ size: "A4", margin: 50, info: {
+            Title: "Atividade AtivAI",
+            Author: "AtivAI",
+            Subject: "Material pedagógico"
+        }});
         res.setHeader("Content-Disposition", "attachment; filename=atividade.pdf");
         res.setHeader("Content-Type", "application/pdf");
         doc.pipe(res);
-        doc.fontSize(16);
-        doc.text("Atividade Gerada pelo AtivAI");
-        doc.moveDown();
-        doc.fontSize(12);
-        doc.text(conteudo);
+
+        doc.font("Times-Bold").fontSize(20).text("Atividade Gerada pelo AtivAI", {
+            align: "center"
+        });
+        doc.moveDown(1);
+        doc.font("Times-Roman").fontSize(12).lineGap(4);
+        doc.text(conteudo, {
+            align: "justify",
+            indent: 20,
+            paragraphGap: 8
+        });
+
+        doc.moveDown(2);
+        doc.fontSize(10).fillColor("gray").text("Gerado por AtivAI", {
+            align: "center"
+        });
         doc.end();
     } catch (error) {
         res.status(500).json({ erro: "Erro ao gerar PDF."});
