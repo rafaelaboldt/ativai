@@ -65,6 +65,10 @@
       let anoSelecionado = "";
       let disciplinaSelecionada = "";
 
+      marked.setOptions({
+        breaks: true
+      });
+
       async function gerarAtividade() {
         const ano = document.getElementById("ano").value;
         const disciplina = document.getElementById("disciplina").value;
