@@ -6,6 +6,8 @@
     <title>AtivAI - Gerador de Atividades Escolares</title>
 
     <link rel="stylesheet" href="./css/style.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
 
   <body>
@@ -53,7 +55,9 @@
       <section class="resultado">
         <h2>Atividade Gerada</h2>
 
-        <pre id="resposta">A atividade aparecerá aqui.</pre>
+        <div id="resposta" class="atividade">
+          A atividade aparecerá aqui.
+        </div>
       </section>
     </div>
     <script>
@@ -119,7 +123,7 @@
           }
 
           ultimaAtividade = data.resposta;
-          resposta.textContent = ultimaAtividade;
+          resposta.innerHTML = marked.parse(ultimaAtividade);
           document.getElementById("btnPdf").disabled = false;
         } catch (error) {
           resposta.textContent = "Erro ao conectar com a API local.";

@@ -8,6 +8,7 @@
     "cors": "latest",
     "dotenv": "latest",
     "express": "latest",
+    "marked": "^18.0.5",
     "pdfkit": "^0.19.1"
   }
 }
