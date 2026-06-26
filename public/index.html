@@ -3,63 +3,115 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AtivAI - Gerador de Atividades Escolares</title>
+    <title>AtivAI - Gerador de Atividades Pedagógicas</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="./css/style.css" />
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
 
   <body>
-    <div class="container">
-      <header>
-        <h1>AtivAI</h1>
-
-        <p>
-          Gere atividades escolares personalizadas para alunos do 1º ao 5º ano
-          do Ensino Fundamental.
-        </p>
-      </header>
-
-      <section class="formulario">
-        <label for="ano">Ano Escolar</label>
-
-        <select id="ano">
-          <option value="1">1º Ano</option>
-          <option value="2">2º Ano</option>
-          <option value="3">3º Ano</option>
-          <option value="4">4º Ano</option>
-          <option value="5">5º Ano</option>
-        </select>
-
-        <label for="disciplina">Disciplina</label>
-
-        <input type="text" id="disciplina" placeholder="Ex.: Matemática" />
-
-        <label for="conteudo">Conteúdo</label>
-
-        <textarea
-          id="conteudo"
-          placeholder="Ex.: Multiplicação, Sistema Solar, Substantivos..."
-        ></textarea>
-
-        <button id="btnGerar" type="button" onclick="gerarAtividade()">
-          Gerar Atividade
-        </button>
-
-        <button id="btnPdf" type="button" onclick="baixarPdf()" disabled>
-          Baixar PDF
-        </button>
-      </section>
-
-      <section class="resultado">
-        <h2>Atividade Gerada</h2>
-
-        <div id="resposta" class="atividade">
-          A atividade aparecerá aqui.
+    <header class="app-header">
+      <div class="header-bg-icons">
+        <i class="fa-solid fa-book icon-bg icon-1"></i>
+        <i class="fa-solid fa-pencil icon-bg icon-2"></i>
+        <i class="fa-solid fa-ruler icon-bg icon-3"></i>
+        <i class="fa-solid fa-shapes icon-bg icon-4"></i>
+        <i class="fa-solid fa-font icon-bg icon-5"></i>
+      </div>
+      
+      <div class="header-content">
+        <div class="header-main">
+          <div class="logo">
+            <div class="logo-icon-wrapper">
+              <i class="fa-solid fa-lightbulb"></i>
+            </div>
+            <h1>AtivAI</h1>
+          </div>
+          <p class="subtitle">Gerador Inteligente de Atividades Pedagógicas</p>
         </div>
-      </section>
-    </div>
+        <div class="header-description">
+          <div class="desc-badge">
+            <i class="fa-solid fa-robot"></i>
+            <span>IA auxiliando professores</span>
+          </div>
+          <p>
+            Crie materiais didáticos interativos e sob medida para seus alunos.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-layout">
+      <aside class="sidebar-panel">
+        <section class="formulario-card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-sliders"></i> Planejamento da Aula</h2>
+            <p>Preencha para gerar a atividade.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="ano">Ano Escolar</label>
+            <div class="select-wrapper">
+              <i class="fa-solid fa-children input-icon"></i>
+              <select id="ano">
+                <option value="1">1º Ano do Ensino Fundamental</option>
+                <option value="2">2º Ano do Ensino Fundamental</option>
+                <option value="3">3º Ano do Ensino Fundamental</option>
+                <option value="4">4º Ano do Ensino Fundamental</option>
+                <option value="5">5º Ano do Ensino Fundamental</option>
+              </select>
+              <i class="fa-solid fa-chevron-down select-arrow"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="disciplina">Disciplina</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-book-open input-icon"></i>
+              <input type="text" id="disciplina" placeholder="Ex.: Matemática, Ciências, Português..." />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="conteudo">Conteúdo da Atividade</label>
+            <div class="textarea-wrapper">
+              <i class="fa-solid fa-pen-clip textarea-icon"></i>
+              <textarea
+                id="conteudo"
+                placeholder="Ex.: Multiplicação, Sistema Solar, Substantivos..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button id="btnGerar" class="btn-primary" type="button" onclick="gerarAtividade()">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Criar Atividade</span>
+            </button>
+            <button id="btnPdf" class="btn-secondary" type="button" onclick="baixarPdf()" disabled>
+              <i class="fa-solid fa-file-pdf"></i> <span>Baixar PDF</span>
+            </button>
+          </div>
+        </section>
+      </aside>
+
+      <article class="document-area">
+        <div class="resultado-card">
+          <div id="resposta" class="atividade-content atividade">
+            <div class="empty-state">
+              <img src="https://cdn-icons-png.flaticon.com/512/3235/3235042.png" alt="Papel" class="empty-icon-img" style="width: 80px; opacity: 0.5; margin-bottom: 20px;">
+              <h3>Sua folha está em branco</h3>
+              <p>Preencha os dados ao lado e clique em "Criar Atividade" para gerar um conteúdo pedagógico incrível.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+
     <script>
       let ultimaAtividade = "";
       let anoSelecionado = "";
@@ -82,31 +134,31 @@
         const botao = document.getElementById("btnGerar");
 
         if (!disciplina.trim()) {
-          resposta.textContent = "Informe a disciplina.";
+          resposta.innerHTML = '<div class="error-msg"><i class="fa-solid fa-circle-exclamation"></i> Informe a disciplina.</div>';
           return;
         }
 
         if (disciplina.trim().length < 3) {
-          resposta.textContent = "Descreva melhor a disciplina.";
+          resposta.innerHTML = '<div class="error-msg"><i class="fa-solid fa-circle-exclamation"></i> Descreva melhor a disciplina.</div>';
           return;
         }
 
         if (!conteudo.trim()) {
-          resposta.textContent = "Informe o conteúdo.";
+          resposta.innerHTML = '<div class="error-msg"><i class="fa-solid fa-circle-exclamation"></i> Informe o conteúdo.</div>';
           return;
         }
 
         if (conteudo.trim().length < 3) {
-          resposta.textContent = "Descreva melhor o conteúdo da atividade.";
+          resposta.innerHTML = '<div class="error-msg"><i class="fa-solid fa-circle-exclamation"></i> Descreva melhor o conteúdo da atividade.</div>';
           return;
         }
 
-        resposta.textContent = "Gerando atividade...";
+        resposta.innerHTML = '<div class="loading-state"><i class="fa-solid fa-spinner fa-spin loading-icon"></i><p>A inteligência artificial está preparando uma aula incrível...</p></div>';
 
         const prompt = `ANO:${ano};DISCIPLINA:${disciplina.trim()};CONTEUDO:${conteudo.trim()}`;
 
         botao.disabled = true;
-        botao.textContent = "Gerando...";
+        botao.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Gerando...</span>';
 
         try {
           const response = await fetch("/api/llm", {
@@ -122,7 +174,7 @@
           const data = await response.json();
 
           if (!response.ok) {
-            resposta.textContent = data.erro || "Erro desconhecido.";
+            resposta.innerHTML = `<div class="error-msg"><i class="fa-solid fa-circle-exclamation"></i> ${data.erro || "Erro desconhecido."}</div>`;
             return;
           }
 
@@ -130,10 +182,10 @@
           resposta.innerHTML = marked.parse(ultimaAtividade);
           document.getElementById("btnPdf").disabled = false;
         } catch (error) {
-          resposta.textContent = "Erro ao conectar com a API local.";
+          resposta.innerHTML = '<div class="error-msg"><i class="fa-solid fa-circle-exclamation"></i> Erro ao conectar com a API local.</div>';
         } finally {
           botao.disabled = false;
-          botao.textContent = "Gerar Atividade";
+          botao.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Criar Atividade</span>';
         }
       }
 
