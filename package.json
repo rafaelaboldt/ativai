@@ -9,6 +9,7 @@
     "dotenv": "latest",
     "express": "latest",
     "marked": "^18.0.5",
-    "pdfkit": "^0.19.1"
+    "pdfkit": "^0.19.1",
+    "puppeteer": "^25.2.1"
   }
 }

@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import PDFDocument from "pdfkit";
+import puppeteer from "puppeteer";
+import { marked } from "marked";
+import fs from "fs/promises";
 const app = express();
 const PORT = 3000;
 const API_KEY = process.env.OPENROUTER_API_KEY;
@@ -16,41 +18,28 @@ app.use(express.static("public"));
 app.get("/api/status", (req, res) => {
     res.json({ status: "API local funcionando", model: MODEL });
 });
-app.post("/api/pdf", (req, res) => {
+app.post("/api/pdf", async (req, res) => {
     try {
-        const { conteudo } = req.body;
+        const { conteudo, nomeArquivo } = req.body;
         if (!conteudo) {
-            return res.status(400).json({ erro: "Conteúdo não informado."});
+            return res.status(400).json({ erro: "Conteúdo não informado." });
         }
-        const doc = new PDFDocument({ size: "A4", margin: 50, info: {
-            Title: "Atividade AtivAI",
-            Author: "AtivAI",
-            Subject: "Material pedagógico"
-        }});
-        res.setHeader("Content-Disposition", "attachment; filename=atividade.pdf");
-        res.setHeader("Content-Type", "application/pdf");
-        doc.pipe(res);
-
-        doc.font("Times-Bold").fontSize(20).text("Atividade Gerada pelo AtivAI", {
-            align: "center"
-        });
-        doc.moveDown(1);
-        doc.font("Times-Roman").fontSize(12).lineGap(4);
-        doc.text(conteudo, {
-            align: "justify",
-            indent: 20,
-            paragraphGap: 8
-        });
-
-        doc.moveDown(2);
-        doc.fontSize(10).fillColor("gray").text("Gerado por AtivAI", {
-            align: "center"
-        });
-        doc.end();
+        const htmlConvertido = marked.parse(conteudo);
+        let html = await fs.readFile( "./public/pdf-template.html", "utf8" );
+        html = html.replace( '<div id="conteudo"></div>', `<div id="conteudo">${htmlConvertido}</div>` );
+        const browser = await puppeteer.launch({ headless: true });
+        const page = await browser.newPage();
+        await page.setContent(html, { waitUntil: "networkidle0" });
+        const pdf = await page.pdf({ format: "A4", printBackground: true });
+        await browser.close();
+        res.setHeader( "Content-Type", "application/pdf" );
+        res.setHeader( "Content-Disposition", `attachment; filename="${nomeArquivo || "atividade"}.pdf"` );
+        res.send(pdf);
     } catch (error) {
-        res.status(500).json({ erro: "Erro ao gerar PDF."});
+        console.error(error);
+        res.status(500).json({ erro: "Erro ao gerar PDF." });
     }
-})
+});
 app.post("/api/llm", async (req, res) => {
     try {
         const { prompt } = req.body;

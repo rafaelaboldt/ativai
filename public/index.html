@@ -139,26 +139,38 @@
 
       async function baixarPdf() {
         try {
+          const arquivoDisciplina = disciplinaSelecionada.trim().replace(/\s+/g, "-");
+          const nomeArquivo = `AtivAI-${arquivoDisciplina}-${anoSelecionado}ano`;
           const response = await fetch("/api/pdf", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              conteudo: ultimaAtividade
+              conteudo: ultimaAtividade,
+              nomeArquivo: nomeArquivo,
             }),
           });
-
+          if (!response.ok) {
+            throw new Error("Erro ao gerar PDF");
+          }
+          if (!response.ok) {
+            const erro = await response.text();
+            console.error(erro);
+            throw new Error("Erro ao gerar PDF");
+          }
           const blob = await response.blob();
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement("a");
-          const arquivoDisciplina = disciplinaSelecionada.trim().replace(/\s+/g, "-");
-          a.download = `AtivAI-${arquivoDisciplina}-${anoSelecionado}ano.pdf`;
           a.href = url;
+          a.download = `${nomeArquivo}.pdf`;
+          document.body.appendChild(a);
           a.click();
+          a.remove();
           window.URL.revokeObjectURL(url);
         } catch (error) {
-          alert("Erro ao gerar o PDF.");
+          console.error(error);
+          alert("Erro ao gerar PDF.");
         }
       }
     </script>
